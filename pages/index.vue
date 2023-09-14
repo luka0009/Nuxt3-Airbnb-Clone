@@ -9,6 +9,7 @@
 		<div>
 			<p>{{ auth }}</p>
 		</div>
+		
 	</div>
 </template>
 
@@ -30,7 +31,7 @@
 			});
 			if (result?.ok && !result.error) {
 				console.log("Successfully LoggedIn");
-				auth.value = 'Authenticated'
+				auth.value = "Authenticated";
 			} else {
 				console.log("Something Went Wrong");
 			}
