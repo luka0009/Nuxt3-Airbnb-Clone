@@ -18,6 +18,8 @@
 			<p>{{ auth }}</p>
 		</div>
 	</div>
+
+	<ModalsRegisterModal />
 </template>
 
 <script setup lang="ts">
