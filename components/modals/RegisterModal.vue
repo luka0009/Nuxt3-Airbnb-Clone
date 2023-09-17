@@ -10,6 +10,10 @@
 		<div class="p-6 flex flex-col gap-4">
 			<Heading title="Welcome to Airbnb" subtitle="Create an account!" />
 			<UForm :schema="schema" :state="state" @submit="submit">
+				<UFormGroup label="Name" name="name">
+					<UInput v-model="state.name" size="xl" class="py-1" />
+				</UFormGroup>
+
 				<UFormGroup label="Email" name="email">
 					<UInput v-model="state.email" size="xl" class="py-1" />
 				</UFormGroup>
@@ -30,7 +34,7 @@
 
 			<div className="flex flex-col gap-4 mt-3">
 				<UButton color="white" class="pl-[23%] md:pl-[33%] py-2">
-					<Icon name="devicon:google"/>
+					<Icon name="devicon:google" />
 					Continue with Google</UButton
 				>
 				<UButton color="white" class="pl-[23%] md:pl-[33%] py-2">
@@ -66,6 +70,9 @@
 	import type { FormSubmitEvent } from "@nuxt/ui/dist/runtime/types";
 	import { useRegisterModal } from "~/composables/states";
 
+	const toast = useToast();
+
+	const isLoading = ref(false);
 	const registerModal = useRegisterModal();
 	const isOpen = ref(false);
 	watch(registerModal, () => {
@@ -79,6 +86,7 @@
 	console.log("REGISTER MODAL IS OPEN/FALSE: ", isOpen);
 
 	const schema = object({
+		name: string().required("Name is Required"),
 		email: string().email("Invalid email").required("Required"),
 		password: string()
 			.min(8, "Must be at least 8 characters")
@@ -88,6 +96,7 @@
 	type Schema = InferType<typeof schema>;
 
 	const state = ref({
+		name: undefined,
 		email: undefined,
 		password: undefined,
 	});
@@ -95,5 +104,35 @@
 	async function submit(event: FormSubmitEvent<Schema>) {
 		// Do something with event.data
 		console.log(event.data);
+		try {
+			isLoading.value = true;
+
+			const { data, error } = await useFetch("/api/register", {
+				method: "POST",
+				body: {
+					name: state.value.name,
+					email: state.value.email,
+					password: state.value.password,
+				},
+			});
+			if (error.value) {
+				console.log(error.value);
+				toast.add({
+					title: "Error",
+					timeout: 3400,
+					description: "Something went wrong",
+					color: "red",
+				});
+			}
+			if (data && data.value) {
+				console.log("Successfully Registered");
+				toast.add({ title: "Successfully Registered!", timeout: 3400 });
+				registerModal.value = false;
+			}
+		} catch (error) {
+			console.log(error);
+		} finally {
+			isLoading.value = false;
+		}
 	}
 </script>
