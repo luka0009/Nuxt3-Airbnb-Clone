@@ -22,8 +22,11 @@
 			class="absolute rounded-xl shadow-md w-[40vw] md:w-3/4 bg-white overflow-hidden right-0 top-12 text-sm"
 		>
 			<div class="flex flex-col cursor-pointer">
-				<div>
-					<MenuItem @click="" label="Login" />
+				<div v-if="session?.user">
+					<MenuItem @click="() => signOut()" label="Log Out" />
+				</div>
+				<div v-else>
+					<MenuItem @click="toggleLoginModal" label="Log in" />
 					<MenuItem @click="toggleRegisterModal" label="Sign up" />
 				</div>
 			</div>
@@ -32,20 +35,29 @@
 </template>
 
 <script setup lang="ts">
-	import { useRegisterModal  } from "~/composables/states";
+	import { useRegisterModal } from "~/composables/states";
 	import MenuItem from "./MenuItem.vue";
-	const isOpen = ref(false);
+	const { getSession, signOut } = useAuth();
 
+	const session = await getSession();
+	console.log("session: ", session);
+
+	const isOpen = ref(false);
 	const toggleOpen = () => {
 		isOpen.value = !isOpen.value;
 	};
 
 	const registerModal = useRegisterModal();
 	const toggleRegisterModal = () => {
-		registerModal.value = !registerModal.value
-		console.log('clicked: ', registerModal.value);
-	}
+		registerModal.value = !registerModal.value;
+		console.log("clicked: ", registerModal.value);
+	};
 
+	const loginModal = useLoginModal();
+	const toggleLoginModal = () => {
+		loginModal.value = !loginModal.value;
+		console.log("Login Modal Value: ", loginModal.value);
+	};
 </script>
 
 <style scoped></style>

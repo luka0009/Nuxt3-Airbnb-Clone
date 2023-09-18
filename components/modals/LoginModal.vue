@@ -7,13 +7,10 @@
 			class="m-1"
 			@click="closeModal"
 		/>
+
 		<div class="p-6 flex flex-col gap-4">
 			<Heading title="Welcome to Airbnb" subtitle="Create an account!" />
 			<UForm :schema="schema" :state="state" @submit="submit">
-				<UFormGroup label="Name" name="name">
-					<UInput v-model="state.name" size="xl" class="py-1" />
-				</UFormGroup>
-
 				<UFormGroup label="Email" name="email">
 					<UInput v-model="state.email" size="xl" class="py-1" />
 				</UFormGroup>
@@ -65,28 +62,23 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from "vue";
+	const { signIn } = useAuth();
 	import { object, string, InferType } from "yup";
 	import type { FormSubmitEvent } from "@nuxt/ui/dist/runtime/types";
-	import { useRegisterModal } from "~/composables/states";
 
 	const toast = useToast();
-
 	const isLoading = ref(false);
-	const registerModal = useRegisterModal();
+	const loginModal = useLoginModal();
 	const isOpen = ref(false);
-	watch(registerModal, () => {
-		isOpen.value = registerModal.value;
+	watch(loginModal, () => {
+		isOpen.value = loginModal.value;
 	});
 
 	const closeModal = () => {
-		registerModal.value = false;
+		loginModal.value = false;
 	};
 
-	console.log("REGISTER MODAL IS OPEN/FALSE: ", isOpen);
-
 	const schema = object({
-		name: string().required("Name is Required"),
 		email: string().email("Invalid email").required("Required"),
 		password: string()
 			.min(8, "Must be at least 8 characters")
@@ -96,44 +88,43 @@
 	type Schema = InferType<typeof schema>;
 
 	const state = ref({
-		name: undefined,
 		email: undefined,
 		password: undefined,
 	});
 
 	async function submit(event: FormSubmitEvent<Schema>) {
-		// Do something with event.data
-		console.log(event.data);
+		// console.log(event.data);
 		try {
 			isLoading.value = true;
 
-			const { data, error } = await useFetch("/api/register", {
-				method: "POST",
-				body: {
-					name: state.value.name,
-					email: state.value.email,
-					password: state.value.password,
-				},
+			const result = await signIn("credentials", {
+				password: state.value.password,
+				email: state.value.email,
+				redirect: false,
 			});
-			if (error.value) {
-				console.log(error.value);
+
+			if (result?.ok && !result.error) {
+				console.log("Successfully LoggedIn");
+				toast.add({
+					title: "Successfully Logged In",
+				});
+				// await refreshNuxtData();
+				window.location.reload();
+			} else {
+				console.log("Something Went Wrong");
 				toast.add({
 					title: "Error",
 					timeout: 3400,
-					description: "Something went wrong",
+					description: result.error,
 					color: "red",
 				});
 			}
-			if (data && data.value) {
-				console.log("Successfully Registered");
-				toast.add({ title: "Successfully Registered!", timeout: 3400 });
-				registerModal.value = false;
-			}
 		} catch (error) {
-			console.log(error);
 		} finally {
 			isLoading.value = false;
-			registerModal.value = false
+			loginModal.value = false;
 		}
 	}
 </script>
+
+<style scoped></style>
