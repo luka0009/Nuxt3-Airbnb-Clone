@@ -25,7 +25,7 @@
 				</UFormGroup>
 
 				<UButton type="submit" class="p-2 w-full mt-5 pl-[41%] text-md">
-					Submit
+					{{ isLoading ? "Loading..." : "Submit" }}
 				</UButton>
 			</UForm>
 
