@@ -9,6 +9,7 @@
 				</div>
 			</UContainer>
 		</div>
+		<Categories />
 	</div>
 </template>
 
@@ -16,8 +17,7 @@
 	import Logo from "./Logo.vue";
 	import Search from "./Search.vue";
 	import UserMenu from "./UserMenu.vue";
-
-	
+	import Categories from "./Categories.vue";
 </script>
 
 <style scoped></style>
