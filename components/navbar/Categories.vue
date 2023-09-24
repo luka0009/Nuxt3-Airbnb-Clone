@@ -2,9 +2,9 @@
 	<div>
 		<UContainer v-if="isMainPage">
 			<div
-				class="pt-4 flex flex-row items-center justify-between overflow-x-auto"
+				class="pt-4 pr-4 flex flex-row items-center justify-between overflow-x-auto"
 			>
-				<UButton @click="removeFilters">No Filters</UButton>
+				<!-- <UButton @click="removeFilters">No Filters</UButton> -->
 				<CategoryBox
 					v-for="item in categories"
 					:key="item.label"
@@ -95,11 +95,11 @@
 			iconName: "ph:mountains",
 			description: "This property is in arctic environment!",
 		},
-		// {
-		// 	label: "Desert",
-		// 	iconName: GiCactus,
-		// 	description: "This property is in the desert!",
-		// },
+		{
+			label: "Desert",
+			iconName: "ph:mountains",
+			description: "This property is in the desert!",
+		},
 		// {
 		// 	label: "Barns",
 		// 	iconName: GiBarn,

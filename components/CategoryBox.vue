@@ -36,7 +36,14 @@
 
 	const handleClick = async () => {
 		console.log("clicked");
-		let currentQuery: { category: string | null } | null = { category: label };
+
+		// let currentQuery: { category: string | null } | null = { category: label };
+		let currentQuery = { ...query };
+		if (currentQuery.category === label) {
+			delete currentQuery.category;
+		} else {
+			currentQuery.category = label;
+		}
 
 		const url = qs.stringifyUrl(
 			{
