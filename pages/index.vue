@@ -2,9 +2,8 @@
 	<div>
 		<ModalsRegisterModal />
 		<ModalsLoginModal />
+		<ModalsRentModal />
 	</div>
 </template>
 
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>

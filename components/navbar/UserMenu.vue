@@ -24,6 +24,8 @@
 			<div class="flex flex-col cursor-pointer">
 				<div v-if="session?.user">
 					<MenuItem @click="() => signOut()" label="Log Out" />
+					<hr class="border border-b-[1px] border-black"/>
+					<MenuItem @click="toggleRentModal" label="Airbnb Your Home" />
 				</div>
 				<div v-else>
 					<MenuItem @click="toggleLoginModal" label="Log in" />
@@ -35,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-	import { useRegisterModal } from "~/composables/states";
+	import { useRegisterModal, useRentModal } from "~/composables/states";
 	import MenuItem from "./MenuItem.vue";
 	const { getSession, signOut } = useAuth();
 
@@ -57,6 +59,12 @@
 	const toggleLoginModal = () => {
 		loginModal.value = !loginModal.value;
 		console.log("Login Modal Value: ", loginModal.value);
+	};
+
+	const rentModal = useRentModal();
+	const toggleRentModal = () => {
+		rentModal.value = !rentModal.value;
+		console.log("Rent Modal Value: ", rentModal.value);
 	};
 </script>
 
